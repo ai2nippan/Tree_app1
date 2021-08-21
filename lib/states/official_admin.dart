@@ -8,6 +8,20 @@ class OfficialAdmin extends StatefulWidget {
 }
 
 class _OfficialAdminState extends State<OfficialAdmin> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  
+  Future<Null> loadDataFromAPI() async{
+
+    String api
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
