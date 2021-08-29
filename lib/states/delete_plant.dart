@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_marker/cached_network_marker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +36,10 @@ class _DeletePlantState extends State<DeletePlant> {
   final formKey = GlobalKey<FormState>();
   TextEditingController plantController = TextEditingController();
   TextEditingController placeController = TextEditingController();
+  // List<ImageSource> imgSrc = [];
+
+  List<String> pathImages = [];
+  int index = 0;
 
   String? avatar;
 
@@ -48,6 +54,11 @@ class _DeletePlantState extends State<DeletePlant> {
   Future<Null> loadDataFromAPI() async {
     // print('avatar111 => $avatar');
     // double size = MediaQuery.of(context).size.width;
+
+    if (pathImages.length != 0) {
+      pathImages.clear();
+    }
+
     String apiCheckAvatar =
         '${MyConstant.domain}/Mobile/Flutter2/Train/TreeTest1/php/getPlantWhereAvatar.php?isAdd=true&avatar=$avatar';
 
@@ -59,6 +70,8 @@ class _DeletePlantState extends State<DeletePlant> {
         // plantModels.add(model);
 
         print('name = ${model.name}');
+
+        String npath = MyConstant.domain + model.avatar;
 
         setState(() {
           plantController.text = model.name;
@@ -74,9 +87,20 @@ class _DeletePlantState extends State<DeletePlant> {
           //   target: latLng,
           //   zoom: 16.0,
           // );
-        });
 
+          // String npath = MyConstant.domain + model.avatar;
+          //file = File(MyConstant.domain+model.avatar);
+          //file = File(npath);
+
+          //Image.file(file!);
+          // imgSrc.add(model.);
+          pathImages.add(model.avatar.trim());
+          print('pathImage : ${pathImages[index]}');
+        });
+        //print('Img = ${MyConstant.domain}${model.avatar}');
+        print('Img = $npath');
         print('lat = $lat, lng = $lng');
+        //index++;
       }
     });
 
@@ -159,13 +183,73 @@ class _DeletePlantState extends State<DeletePlant> {
                     // buildImage(constraints),
                     buildAvatar(size),
                     buildTitle('แผนที่ตำแหน่งที่ปลูก'),
-                    buildMap(),
+                    buildMap(), deleteButton(),
                   ],
                 ),
               ),
             ),
           ),
         ));
+  }
+
+  Future<Null> confirmDialogDelete() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: ListTile(
+          leading: CachedNetworkImage(
+            imageUrl: '${MyConstant.domain}${pathImages[0]}',
+            placeholder: (context, url) => ShowProgress(),
+          ),
+          title: ShowTitle(
+            title: 'Delete ${plantController.text}? ',
+            textStyle: MyConstant().h2Style(),
+          ),
+          subtitle: ShowTitle(
+            title: 'สถานที่ : ${placeController.text}',
+            textStyle: MyConstant().h3Style(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              print('Perform delete');
+              String apiDeletePlantWhereAvatar =
+                '${MyConstant.domain}/Mobile/Flutter2/Train/TreeTest1/php/deletePlantWhereAvatar.php?isAdd=true&avatar=$avatar';
+
+              await Dio().get(apiDeletePlantWhereAvatar).then((value) {
+                Navigator.pop(context); // pop from dialog
+                Navigator.pop(context); // pop from this screen 
+                loadDataFromAPI();
+             });
+
+            },
+            child: Text('Delete'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget deleteButton() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 30),
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton.icon(
+          style: MyConstant().myButtonStyleRed(),
+          onPressed: () {
+            //print('Delete');
+            confirmDialogDelete();
+          },
+          icon: Icon(
+            Icons.delete,
+          ),
+          label: Text('Delete')),
+    );
   }
 
   Future<Null> chooseImage(ImageSource source) async {
@@ -186,28 +270,35 @@ class _DeletePlantState extends State<DeletePlant> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: () => chooseImage(ImageSource.camera),
-          icon: Icon(
-            Icons.add_a_photo,
-            size: 36,
-            color: MyConstant.dark,
-          ),
-        ),
+        // IconButton(
+        //   onPressed: () => chooseImage(ImageSource.camera),
+        //   icon: Icon(
+        //     Icons.add_a_photo,
+        //     size: 36,
+        //     color: MyConstant.dark,
+        //   ),
+        // ),
         Container(
+          margin: EdgeInsets.symmetric(horizontal: 70),
           width: size * 0.6,
-          child: file == null
-              ? ShowImage(path: MyConstant.image9)
-              : Image.file(file!),
+          child: (pathImages.isEmpty || pathImages == null)
+              //file != null
+              ? ShowProgress() //ShowImage(path: MyConstant.image9)
+              : CachedNetworkImage(
+                  imageUrl:
+                      '${MyConstant.domain}${pathImages[0]}'), //Image.file(file!),
+
+          // ? CachedNetworkImage(imageUrl: '${MyConstant.domain}${pathImages[0]}')//Image.file(file!),
+          // : ShowImage(path: MyConstant.image9)
         ),
-        IconButton(
-          onPressed: () => chooseImage(ImageSource.gallery),
-          icon: Icon(
-            Icons.add_photo_alternate,
-            size: 36,
-            color: MyConstant.dark,
-          ),
-        ),
+        // IconButton(
+        //   onPressed: () => chooseImage(ImageSource.gallery),
+        //   icon: Icon(
+        //     Icons.add_photo_alternate,
+        //     size: 36,
+        //     color: MyConstant.dark,
+        //   ),
+        // ),
       ],
     );
   }

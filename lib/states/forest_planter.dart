@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_app1/models/plant_model.dart';
+import 'package:tree_app1/states/my_homepage.dart';
 import 'package:tree_app1/states/delete_plant.dart';
 import 'package:tree_app1/utility/my_constant.dart';
 
@@ -28,6 +29,12 @@ class _ForestPlanterState extends State<ForestPlanter> {
   }
 
   Future<Null> loadValueFromAPI() async {
+
+    if (plantModels.length != null) {
+      plantModels.clear();
+      imgList.clear();
+    }
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     //String idPlanter = preferences.getString('id')!;
     String? idPlanter = preferences.getString('id');
@@ -106,7 +113,11 @@ class _ForestPlanterState extends State<ForestPlanter> {
                     print('image : $item');
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => DeletePlant(images: item,),//DeletePlant(plantModel: plantModels[item],),
-                    ));
+                    )).then((value) {
+                      //return loadValueFromAPI();
+                      loadValueFromAPI();
+                      bannerCarouse();
+                    });
                   },
                   child: Center(
                     child: Image.network(
@@ -139,7 +150,7 @@ class _ForestPlanterState extends State<ForestPlanter> {
         child: bannerCarouse(),
       ), //Text('Forest Planter'),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, MyConstant.routeAddPlant),
+        onPressed: () => Navigator.pushNamed(context, MyConstant.routeMyHomePage),//Navigator.pushNamed(context, MyConstant.routeAddPlant),
         child: Text('Add'),
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_marker/cached_network_marker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -32,6 +33,12 @@ class _AddPlantState extends State<AddPlant> {
   String avatar = '';
   List<String> paths = [];
 
+  // BitmapDescriptor? pinLocationIcon;
+
+  // final generator = CachedNetworkMarker(url: '${MyConstant.domain}/Mobile/Flutter2/Train/TreeTest1/php/plant/plant52453.jpg', dpr: 200,);//MediaQuery.of(context).devicePixelRatio,);
+
+  // final bitmap = generator.circleAvatar(CircleAvatarParams(color: Colors.lightBlue));
+
   @override
   void initState() {
     // TODO: implement initState
@@ -39,6 +46,10 @@ class _AddPlantState extends State<AddPlant> {
     checkPermission();
 
   }
+
+  // Future<Null> setCustomMapPin() async{
+  //   pinLocationIcon = await BitmapDescriptor.fromBytes(byteData)
+  // }
 
   Future<Null> checkPermission() async {
     bool locationService;
@@ -303,6 +314,7 @@ class _AddPlantState extends State<AddPlant> {
 
   Set<Marker> setMarker() => <Marker>[
         Marker(
+          // icon: ,
           markerId: MarkerId('id'),
           position: LatLng(lat!, lng!),
           infoWindow: InfoWindow(

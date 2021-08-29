@@ -4,9 +4,11 @@ class MyConstant {
   // General information
   static String appName = 'Forest Park';
   //static String domain = 'http://127.0.0.1:5500';
-  // static String domain = 'http://192.168.1.102';
-  static String domain = 'http://192.168.43.88';
+  // static String domain = 'http://192.168.1.107';
+  //static String domain = 'http://192.168.43.88';
   //static String domain = 'https://7efab5487b92.ngrok.io';
+  // New ngrok
+  static String domain = 'https://8d82-2405-9800-b820-171c-64c3-3747-7cb-c586.ngrok.io';
 
   // Route screen
   static String routeAuthen = '/authen';
@@ -15,7 +17,7 @@ class MyConstant {
   static String routeForestPlanter = '/forestPlanter';
   static String routeAddPlant = '/addPlant';
   // static String routeDelPlant = '/delPlant';
-  
+  static String routeMyHomePage = '/myHomePage';
 
   // Images
   static String image1 = 'images/image1.png';
@@ -40,7 +42,7 @@ class MyConstant {
   static Color light = Color(0xff5efc82); // For focus color
 
   static Color redcolor1 = Color(0xffd50000); // For RedEye
-  static Color blackcolor1 = Color(0xff140000);     // For RedEye
+  static Color blackcolor1 = Color(0xff140000); // For RedEye
 
   // Style
 
@@ -73,6 +75,13 @@ class MyConstant {
 
   ButtonStyle myButtonStyle() => ElevatedButton.styleFrom(
         primary: MyConstant.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      );
+
+  ButtonStyle myButtonStyleRed() => ElevatedButton.styleFrom(
+        primary: MyConstant.redcolor1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),

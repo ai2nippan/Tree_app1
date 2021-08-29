@@ -4,6 +4,7 @@ import 'package:tree_app1/states/authen.dart';
 import 'package:tree_app1/states/create_account.dart';
 import 'package:tree_app1/states/delete_plant.dart';
 import 'package:tree_app1/states/forest_planter.dart';
+import 'package:tree_app1/states/my_homepage.dart';
 import 'package:tree_app1/states/official_admin.dart';
 import 'package:tree_app1/utility/my_constant.dart';
 
@@ -14,6 +15,7 @@ final Map<String, WidgetBuilder> map = {
   '/forestPlanter':(BuildContext context) => ForestPlanter(),
   '/addPlant':(BuildContext context) => AddPlant(),
   // '/delPlant':(BuildContext context) => DeletePlant(),
+  '/myHomePage':(BuildContext context) => MyHomePage(),
 };
 
 // String initRoute;

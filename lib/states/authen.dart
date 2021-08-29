@@ -113,6 +113,7 @@ class _AuthenState extends State<Authen> {
           if (password == userModel.password) {
             String usertype = userModel.usertype;
             print('## Authen Success in userType = $usertype');
+            
 
             SharedPreferences preferences =
                 await SharedPreferences.getInstance();

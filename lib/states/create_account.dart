@@ -162,7 +162,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'Student',
+            value: 'นักเรียน / นักศึกษา',//'Student',
             groupValue: typeOccupation,
             onChanged: (value) {
               setState(() {
@@ -186,7 +186,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'Employee',
+            value: 'พนักงานบริษัท / ลูกจ้าง',//'Employee',
             groupValue: typeOccupation,
             onChanged: (value) {
               setState(() {
@@ -210,7 +210,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'Government',
+            value: 'ข้าราชการ',//'Government',
             groupValue: typeOccupation,
             onChanged: (value) {
               setState(() {
@@ -234,7 +234,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'Owner',
+            value: 'เจ้าของกิจการ',//'Owner',
             groupValue: typeOccupation,
             onChanged: (value) {
               setState(() {
@@ -258,7 +258,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'M',
+            value: 'ชาย',//'M',
             groupValue: typeSex,
             onChanged: (value) {
               setState(() {
@@ -282,7 +282,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'F',
+            value: 'หญิง',//'F',
             groupValue: typeSex,
             onChanged: (value) {
               setState(() {
@@ -306,7 +306,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'LT18',
+            value: 'ต่ำกว่า 18 ปี',//'LT18',
             groupValue: typeAge,
             onChanged: (value) {
               setState(() {
@@ -330,7 +330,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'GT18-25',
+            value: 'มากกว่า 18 - 25 ปี',//'GT18-25',
             groupValue: typeAge,
             onChanged: (value) {
               setState(() {
@@ -354,7 +354,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'GT25-60',
+            value: 'มากกว่า 25 - 60 ปี',//'GT25-60',
             groupValue: typeAge,
             onChanged: (value) {
               setState(() {
@@ -378,7 +378,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: 'GT60',
+            value: 'มากกว่า 60 ปี',//'GT60',
             groupValue: typeAge,
             onChanged: (value) {
               setState(() {
