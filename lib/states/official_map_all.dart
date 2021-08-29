@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cached_network_marker/cached_network_marker.dart';
@@ -34,13 +35,21 @@ class _OfficialMapAllState extends State<OfficialMapAll> {
   double? lat, lng;
   String? namePlanter;
 
-  static const colors = [
-    Colors.purple,
-    Colors.red,
-    Colors.lightBlue,
-    Colors.green,
-    Colors.grey,
-  ];
+  Random random = Random();
+  int idx = 0;
+
+  // static const colors = [
+  //   Colors.purple,
+  //   Colors.red,
+  //   Colors.lightBlue,
+  //   Colors.green,
+  //   Colors.grey,
+  // ];
+
+  // List<Color> colors = [Colors.red, Colors.green, Colors.yellow];
+  Color colorss = Colors.primaries[Random().nextInt(Colors.primaries.length)];
+
+  // Colors acolr = Colors.primaries[_random.nextInt(Colors.primaries.length)][_random.nextInt(9)*100];
 
   @override
   void initState() {
@@ -81,6 +90,15 @@ class _OfficialMapAllState extends State<OfficialMapAll> {
             markersPositions
                 .add(LatLng(double.parse(model.lat), double.parse(model.lng)));
             urls.add('${MyConstant.domain}${model.avatar}');
+            idx = random.nextInt(3);
+            //buildMapImage(context);
+            // GoogleMap(
+            // initialCameraPosition: CameraPosition(
+            //   target: LatLng(lat!, lng!),
+            //   zoom: 16,//14.4746,
+            // ),
+            //markers: {...markers},
+            // );
           });
         }
       }
@@ -112,12 +130,19 @@ class _OfficialMapAllState extends State<OfficialMapAll> {
 
   FutureBuilder<List<Uint8List>> buildMapImage(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait(List.generate(
+      future: Future.wait(
+        List.generate(
           markersPositions.length,
           (index) => CachedNetworkMarker(
-                url: urls[index],
-                dpr: MediaQuery.of(context).devicePixelRatio,
-              ).circleAvatar(CircleAvatarParams(color: colors[index])))),
+            url: urls[index],
+            dpr: MediaQuery.of(context).devicePixelRatio,
+          ).circleAvatar(
+            CircleAvatarParams(
+                color:
+                    colorss), //colors[idx]),//Colors.primaries[Random().nextInt(Colors.primaries.length)]),//colors[index]),
+          ),
+        ),
+      ),
       builder: (context, AsyncSnapshot<List<Uint8List>> snapshot) {
         if (snapshot.hasData) {
           final bytes = snapshot.data;
@@ -133,8 +158,9 @@ class _OfficialMapAllState extends State<OfficialMapAll> {
           return GoogleMap(
             initialCameraPosition: CameraPosition(
               target: LatLng(lat!, lng!),
-              zoom: 14.4746,
+              zoom: 16.0, //14.4746,
             ),
+            onMapCreated: (controller) {},
             markers: {...markers},
           );
         }
