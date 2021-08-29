@@ -159,6 +159,7 @@ class _AddPlantState extends State<AddPlant> {
   // }
 
   Future<Null> uploadPictureAndInsertData() async {
+
     String plantName = plantController.text;
     String place = placeController.text;
     print('## plant = $plantName, place = $place');

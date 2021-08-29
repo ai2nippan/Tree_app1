@@ -8,6 +8,8 @@ import 'package:tree_app1/models/plant_model.dart';
 import 'package:tree_app1/states/my_homepage.dart';
 import 'package:tree_app1/states/delete_plant.dart';
 import 'package:tree_app1/utility/my_constant.dart';
+import 'package:tree_app1/widgets/show_progress.dart';
+import 'package:tree_app1/widgets/show_title.dart';
 
 class ForestPlanter extends StatefulWidget {
   const ForestPlanter({Key? key}) : super(key: key);
@@ -22,6 +24,9 @@ class _ForestPlanterState extends State<ForestPlanter> {
   List<PlantModel> plantModels = [];
   // String urlImage = '';
 
+  bool load = true;
+  bool? havedata;
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +34,6 @@ class _ForestPlanterState extends State<ForestPlanter> {
   }
 
   Future<Null> loadValueFromAPI() async {
-
     if (plantModels.length != null) {
       plantModels.clear();
       imgList.clear();
@@ -46,18 +50,31 @@ class _ForestPlanterState extends State<ForestPlanter> {
 
     await Dio().get(apiGetPlantWhereIdPlanter).then((value) {
       // print('value ==> $value');
-      for (var item in json.decode(value.data)) {
-        PlantModel model = PlantModel.fromMap(item);
-        print('## plant name = ${model.name}, avatar = ${model.avatar}');
+
+      if (value.toString().trim() == 'null') {
+        // No data
         setState(() {
-          String urlImage = '${MyConstant.domain}${model.avatar}';
-          String imgname = model.name;
-          print('### urlImage =  $urlImage, imgname = $imgname');
-          // widgetPlant.add(makePlant(urlImage)); // For Test
-          widgetPlant.add(makePlant(imgname, urlImage)); // For Test
-          imgList.add(urlImage); // For Test
-          plantModels.add(model);
+          load = false;
+          havedata = false;
         });
+      } else {
+        // Have data
+        for (var item in json.decode(value.data)) {
+          PlantModel model = PlantModel.fromMap(item);
+          print('## plant name = ${model.name}, avatar = ${model.avatar}');
+          setState(() {
+            load = false;
+            havedata = true;
+
+            String urlImage = '${MyConstant.domain}${model.avatar}';
+            String imgname = model.name;
+            print('### urlImage =  $urlImage, imgname = $imgname');
+            // widgetPlant.add(makePlant(urlImage)); // For Test
+            widgetPlant.add(makePlant(imgname, urlImage)); // For Test
+            imgList.add(urlImage); // For Test
+            plantModels.add(model);
+          });
+        }
       }
     });
   }
@@ -111,9 +128,13 @@ class _ForestPlanterState extends State<ForestPlanter> {
                 child: GestureDetector(
                   onTap: () {
                     print('image : $item');
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DeletePlant(images: item,),//DeletePlant(plantModel: plantModels[item],),
-                    )).then((value) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                      builder: (context) => DeletePlant(
+                        images: item,
+                      ), //DeletePlant(plantModel: plantModels[item],),
+                    ))
+                        .then((value) {
                       //return loadValueFromAPI();
                       loadValueFromAPI();
                       bannerCarouse();
@@ -145,14 +166,38 @@ class _ForestPlanterState extends State<ForestPlanter> {
       appBar: AppBar(
         title: Text('Forest Planter'),
       ),
-      body: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        child: bannerCarouse(),
-      ), //Text('Forest Planter'),
+      body: load
+          ? ShowProgress()
+          : havedata!
+              ? buildBanner()
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShowTitle(
+                        title: 'ไม่พบข้อมูล',
+                        textStyle: MyConstant().h1Style(),
+                      ),
+                    ],
+                  ),
+                ), //Text('Forest Planter'),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, MyConstant.routeMyHomePage),//Navigator.pushNamed(context, MyConstant.routeAddPlant),
+        onPressed: () => Navigator.pushNamed(
+            context,
+            MyConstant
+                .routeAddPlant).then((value) {
+                  loadValueFromAPI();
+                  bannerCarouse();
+                }), //Navigator.pushNamed(context, MyConstant.routeMyHomePage),
         child: Text('Add'),
       ),
+    );
+  }
+
+  Container buildBanner() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: bannerCarouse(),
     );
   }
 }
